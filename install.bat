@@ -102,3 +102,4 @@ if /i "!MAKE_SHORTCUT!"=="Y" (
 echo.
 echo Setup finished. Press any key to exit.
 pause >nul
+

@@ -16,3 +16,4 @@ if %ERRORLEVEL% EQU 0 (
     echo.
     echo [-] Note: Could not create shortcut automatically. You can right-click 'launch_app.vbs' and select 'Send to -> Desktop'.
 )
+
