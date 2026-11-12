@@ -47,8 +47,8 @@ By capturing raw infrared data via the Windows MediaCapture WinRT API, **SPECTRA
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/<your-username>/IR_Camera.git
-cd IR_Camera
+git clone https://github.com/shamsghani/UnlockIR.git
+cd UnlockIR
 ```
 
 ### 2. Run Automatic Setup
@@ -125,7 +125,7 @@ options:
 ## 📂 Project Architecture
 
 ```
-IR_Camera/
+UnlockIR/
 ├── Captures/                  # Auto-created snapshot storage (.gitignore protected)
 │   └── .gitkeep
 ├── static/
