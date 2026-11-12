@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPECTRA // IR-CORE - Precision Infrared Studio</title>
+  <style>
+    :root {
+      --bg-void: #07080B;
+      --bg-surface: #0E1118;
+      --bg-elevated: #151A24;
+      --bg-card: rgba(21, 26, 36, 0.7);
+      
+      --border-subtle: rgba(255, 255, 255, 0.07);
+      --border-active: rgba(0, 255, 163, 0.3);
+      --border-focus: #00FFA3;
+
+      --accent-nvg: #00FFA3;
+      --accent-ir: #FF334B;
+      --accent-amber: #FFB800;
+      --accent-cyan: #00E5FF;
+      
+      --text-main: #FFFFFF;
+      --text-secondary: #9099A8;
+      --text-muted: #525B6C;
+
+      --font-mono: "SF Mono", "JetBrains Mono", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif;
+      --ease-tactical: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background: var(--bg-void);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top Navigation Bar */
+    header {
+      height: 54px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      z-index: 100;
+      flex-shrink: 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(135deg, var(--accent-ir), #FF7B00);
+      border-radius: 4px;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 0 12px rgba(255, 51, 75, 0.4);
+    }
+
+    .brand-logo svg {
+      width: 14px;
+      height: 14px;
+      fill: #fff;
+    }
+
+    .brand-title {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: #fff;
+    }
+
+    .brand-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      padding: 2px 6px;
+      background: rgba(0, 255, 163, 0.12);
+      border: 1px solid rgba(0, 255, 163, 0.25);
+      color: var(--accent-nvg);
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .pulsing-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-nvg);
+      box-shadow: 0 0 8px var(--accent-nvg);
+      animation: pulse-dot 1.4s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.75); }
+    }
+
+    .telemetry-pills {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pill {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      background: var(--bg-elevated);
+      padding: 4px 10px;
+      border-radius: 4px;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill b {
+      color: #fff;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .pill.red { border-color: rgba(255, 51, 75, 0.4); }
+    .pill.red b { color: var(--accent-ir); }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 7px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      transition: all 0.2s var(--ease-tactical);
+      border: 1px solid transparent;
+      outline: none;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn-reignite {
+      background: rgba(255, 51, 75, 0.15);
+      border-color: rgba(255, 51, 75, 0.35);
+      color: #FF5A6E;
+    }
+    .btn-reignite:hover {
+      background: rgba(255, 51, 75, 0.25);
+      border-color: var(--accent-ir);
+      box-shadow: 0 0 14px rgba(255, 51, 75, 0.3);
+    }
+
+    .btn-vcam {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--border-subtle);
+      color: var(--text-secondary);
+    }
+    .btn-vcam.active {
+      background: rgba(0, 255, 163, 0.15);
+      border-color: var(--accent-nvg);
+      color: var(--accent-nvg);
+      box-shadow: 0 0 14px rgba(0, 255, 163, 0.25);
+    }
+
+    .btn-icon {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      padding: 7px;
+    }
+    .btn-icon:hover {
+      color: #fff;
+      border-color: var(--border-focus);
+    }
+
+    /* Main Container (3 Panels) */
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 310px 1fr 340px;
+      height: calc(100vh - 54px);
+      position: relative;
+      background: var(--bg-void);
+    }
+
+    main.terminal-collapsed {
+      grid-template-columns: 320px 1fr 0px;
+    }
+
+    /* Left Control Matrix */
+    .controls-panel {
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border-subtle);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 16px;
+    }
+
+    .controls-panel::-webkit-scrollbar {
+      width: 5px;
+    }
+    .controls-panel::-webkit-scrollbar-thumb {
+      background: var(--bg-elevated);
+      border-radius: 3px;
+    }
+
+    .section-title {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .section-title::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border-subtle);
+    }
+
+    .control-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .control-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .control-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+    }
+
+    .control-label {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .control-val {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent-nvg);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Range Sliders */
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 4px;
+      background: #202636;
+      border-radius: 2px;
+      outline: none;
+      transition: background 0.2s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--accent-nvg);
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(0, 255, 163, 0.4);
+      transition: all 0.15s var(--ease-tactical);
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    /* Color Preset Chips */
+    .palette-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .palette-chip {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      padding: 8px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      transition: all 0.15s;
+    }
+
+    .palette-chip:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+
+    .palette-chip.active {
+      border-color: var(--accent-nvg);
+      background: rgba(0, 255, 163, 0.08);
+      color: #fff;
+    }
+
+    .chip-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .swatch-phosphor { background: linear-gradient(135deg, #00FFA3, #005A32); }
+    .swatch-inferno { background: linear-gradient(135deg, #FF334B, #FFB800); }
+    .swatch-cyan { background: linear-gradient(135deg, #00E5FF, #004D73); }
+    .swatch-magma { background: linear-gradient(135deg, #FB5374, #000004); }
+    .swatch-turbo { background: linear-gradient(135deg, #30123B, #FABA39); }
+    .swatch-mono { background: linear-gradient(135deg, #FFFFFF, #222222); }
+
+    /* Switch toggle */
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 32px;
+      height: 18px;
+    }
+
+    .switch input { opacity: 0; width: 0; height: 0; }
+
+    .slider-toggle {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #252D3E;
+      border-radius: 18px;
+      transition: 0.2s;
+    }
+
+    .slider-toggle:before {
+      position: absolute;
+      content: "";
+      height: 12px;
+      width: 12px;
+      left: 3px;
+      bottom: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: 0.2s;
+    }
+
+    input:checked + .slider-toggle {
+      background: var(--accent-nvg);
+    }
+
+    input:checked + .slider-toggle:before {
+      transform: translateX(14px);
+      background: #000;
+    }
+
+    /* Center Camera Viewport */
+    .viewport-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      position: relative;
+      background: #040507;
+      overflow: hidden;
+    }
+
+    .viewport-canvas-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 16px;
+    }
+
+    .viewport-frame {
+      position: relative;
+      max-width: 100%;
+      max-height: 100%;
+      aspect-ratio: 16 / 9;
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+      border-radius: 6px;
+      overflow: hidden;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #stream-view {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* Tactical Corner Reticles */
+    .reticle {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(0, 255, 163, 0.6);
+      pointer-events: none;
+      z-index: 10;
+    }
+    .reticle-tl { top: 12px; left: 12px; border-right: none; border-bottom: none; }
+    .reticle-tr { top: 12px; right: 12px; border-left: none; border-bottom: none; }
+    .reticle-bl { bottom: 12px; left: 12px; border-right: none; border-top: none; }
+    .reticle-br { bottom: 12px; right: 12px; border-left: none; border-top: none; }
+
+    /* Crosshair & Grid Overlay */
+    .hud-grid {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      display: none;
+      z-index: 5;
+    }
+    .hud-grid.visible { display: block; }
+    .grid-line-h { position: absolute; left: 0; right: 0; height: 1px; background: rgba(0, 255, 163, 0.15); }
+    .grid-line-v { position: absolute; top: 0; bottom: 0; width: 1px; background: rgba(0, 255, 163, 0.15); }
+    .grid-crosshair {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 30px; height: 30px;
+      border: 1px solid rgba(0, 255, 163, 0.5);
+      border-radius: 50%;
+    }
+
+    /* Top-Right Histogram in Viewport */
+    .histogram-overlay {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(10, 14, 20, 0.75);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      padding: 6px 8px;
+      z-index: 15;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .hist-title {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+    }
+
+    #hist-canvas {
+      width: 120px;
+      height: 34px;
+    }
+
+    /* Flash Overlay */
+    .flash-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #fff;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s var(--ease-tactical);
+      z-index: 50;
+    }
+    .flash-overlay.trigger {
+      opacity: 0.85;
+      transition: none;
+    }
+
+    /* Bottom Shutter & Gallery Bar */
+    .viewport-footer {
+      height: 74px;
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 20;
+    }
+
+    .gallery-preview {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .gallery-thumb {
+      width: 52px;
+      height: 42px;
+      border-radius: 4px;
+      border: 1px solid var(--border-subtle);
+      object-fit: cover;
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .gallery-thumb:hover {
+      transform: scale(1.08);
+      border-color: var(--accent-nvg);
+    }
+
+    .shutter-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .shutter-btn {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1C2333, #0E131E);
+      border: 2px solid var(--accent-nvg);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      box-shadow: 0 0 16px rgba(0, 255, 163, 0.25);
+      transition: all 0.2s var(--ease-tactical);
+      outline: none;
+    }
+    .shutter-btn:hover {
+      transform: scale(1.06);
+      box-shadow: 0 0 24px rgba(0, 255, 163, 0.45);
+    }
+    .shutter-btn:active {
+      transform: scale(0.94);
+    }
+
+    .shutter-inner {
+      width: 22px;
+      height: 22px;
+      background: var(--accent-nvg);
+      border-radius: 50%;
+    }
+
+    /* Right Side Terminal */
+    .terminal-panel {
+      background: #080B10;
+      border-left: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+      transition: width 0.3s var(--ease-tactical);
+    }
+
+    .terminal-header {
+      height: 38px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      background: #0C0F16;
+    }
+
+    .terminal-title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .terminal-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .term-btn {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .term-btn:hover {
+      color: #fff;
+      border-color: rgba(255,255,255,0.25);
+    }
+
+    .terminal-logs {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .terminal-logs::-webkit-scrollbar { width: 4px; }
+    .terminal-logs::-webkit-scrollbar-thumb { background: #1B2230; }
+
+    .log-line {
+      display: flex;
+      gap: 8px;
+      word-break: break-all;
+    }
+
+    .log-time { color: var(--text-muted); flex-shrink: 0; }
+    .log-cat { font-weight: 600; flex-shrink: 0; width: 68px; }
+    .log-cat.SENSOR { color: var(--accent-cyan); }
+    .log-cat.ILLUM { color: var(--accent-ir); }
+    .log-cat.VCAM { color: var(--accent-nvg); }
+    .log-cat.CAPTURE { color: var(--accent-amber); }
+    .log-cat.SETTINGS { color: #8F99AC; }
+    .log-cat.USER { color: #C084FC; }
+
+    .log-msg { color: #C6D0E0; }
+    .log-msg.SUCCESS { color: var(--accent-nvg); }
+    .log-msg.ERROR { color: var(--accent-ir); }
+
+    /* Collapsed Terminal Toggle button */
+    .terminal-expand-tab {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-right: none;
+      padding: 10px 4px;
+      border-radius: 6px 0 0 6px;
+      cursor: pointer;
+      display: none;
+      z-index: 50;
+      color: var(--text-secondary);
+    }
+    .terminal-collapsed .terminal-expand-tab { display: block; }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header Navigation -->
+  <header>
+    <div class="brand">
+      <div class="brand-logo">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
+      </div>
+      <div class="brand-title">SPECTRA // IR-01</div>
+      <div class="brand-badge">
+        <div class="pulsing-dot"></div>
+        <span>LIVE // 30 FPS</span>
+      </div>
+    </div>
+
+    <!-- Telemetry Pills -->
+    <div class="telemetry-pills">
+      <div class="pill">FPS: <b id="fps-val">--</b></div>
+      <div class="pill">SENSOR: <b>640x360 L8</b></div>
+      <div class="pill red" id="flood-pill">FLOOD LED: <b id="flood-val">ACTIVE</b></div>
+      <div class="pill">LUX: <b id="mean-val">--</b></div>
+    </div>
+
+    <!-- Header Actions -->
+    <div class="header-actions">
+      <button class="btn btn-reignite" id="btn-reignite" title="Reset hardware safety watchdog">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+        <span>RE-IGNITE LED</span>
+      </button>
+
+      <button class="btn btn-vcam" id="btn-vcam" title="Broadcast live stream to Discord / Zoom">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>
+        <span id="vcam-btn-text">DISCORD WEBCAM: OFF</span>
+      </button>
+
+      <button class="btn btn-icon" id="btn-grid" title="Toggle Crosshairs & Grid">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg>
+      </button>
+
+      <button class="btn btn-icon" id="btn-terminal-toggle" title="Toggle Telemetry Terminal">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Work Area -->
+  <main id="main-container">
+
+    <!-- Left Control Matrix -->
+    <aside class="controls-panel">
+      
+      <!-- Exposure & Gain -->
+      <div>
+        <div class="section-title">Optical & Exposure Control</div>
+        <div class="control-card">
+          <div class="control-row">
+            <div class="control-header">
+              <span class="control-label">Exposure (EV)</span>
+              <span class="control-val" id="val-exposure">0.0 EV</span>
+            </div>
+            <input type="range" id="slider-exposure" min="-3" max="3" step="0.1" value="0">
+          </div>
+
+          <div class="control-row">
+            <div class="control-header">
+              <span class="control-label">Digital Gain (ISO)</span>
+              <span class="control-val" id="val-gain">1.0x</span>
+            </div>
+            <input type="range" id="slider-gain" min="1" max="10" step="0.2" value="1">
+          </div>
+
+          <div class="control-row">
+            <div class="control-header">
+              <span class="control-label">Gamma Curve</span>
+              <span class="control-val" id="val-gamma">1.00</span>
+            </div>
+            <input type="range" id="slider-gamma" min="0.4" max="2.5" step="0.05" value="1.0">
+          </div>
+
+          <div class="control-row">
+            <div class="control-header">
+              <span class="control-label">Brightness</span>
+              <span class="control-val" id="val-bright">0</span>
+            </div>
+            <input type="range" id="slider-bright" min="-100" max="100" step="1" value="0">
+          </div>
+
+          <div class="control-row">
+            <div class="control-header">
+              <span class="control-label">Contrast</span>
+              <span class="control-val" id="val-contrast">1.00x</span>
+            </div>
+            <input type="range" id="slider-contrast" min="0.5" max="3.0" step="0.05" value="1.0">
+          </div>
+        </div>
+      </div>
+
+      <!-- CLAHE Night Vision Engine -->
+      <div>
+        <div class="section-title">Night Vision Engine (CLAHE)</div>
+        <div class="control-card">
+          <div class="toggle-row">
+            <span class="control-label">Adaptive Boost</span>
+            <label class="switch">
+              <input type="checkbox" id="toggle-clahe" checked>
+              <span class="slider-toggle"></span>
+            </label>
+          </div>
+
+          <div class="control-row">
+            <div class="control-header">
+              <span class="control-label">Boost Intensity (Clip Limit)</span>
+              <span class="control-val" id="val-clahe-clip">3.5</span>
+            </div>
+            <input type="range" id="slider-clahe-clip" min="1.0" max="10.0" step="0.2" value="3.5">
+          </div>
+
+          <div class="control-row">
+            <div class="control-header">
+              <span class="control-label">Tile Grid Granularity</span>
+              <span class="control-val" id="val-clahe-grid">8x8</span>
+            </div>
+            <input type="range" id="slider-clahe-grid" min="4" max="16" step="2" value="8">
+          </div>
+        </div>
+      </div>
+
+      <!-- Spectral Colormap Presets -->
+      <div>
+        <div class="section-title">Spectral Colormap</div>
+        <div class="palette-grid">
+          <div class="palette-chip active" data-map="phosphor">
+            <div class="chip-swatch swatch-phosphor"></div>
+            <span>NVG Phosphor</span>
+          </div>
+          <div class="palette-chip" data-map="inferno">
+            <div class="chip-swatch swatch-inferno"></div>
+            <span>Inferno FLIR</span>
+          </div>
+          <div class="palette-chip" data-map="cyan">
+            <div class="chip-swatch swatch-cyan"></div>
+            <span>Cyber Ice</span>
+          </div>
+          <div class="palette-chip" data-map="magma">
+            <div class="chip-swatch swatch-magma"></div>
+            <span>Magma</span>
+          </div>
+          <div class="palette-chip" data-map="turbo">
+            <div class="chip-swatch swatch-turbo"></div>
+            <span>Turbo Heat</span>
+          </div>
+          <div class="palette-chip" data-map="mono">
+            <div class="chip-swatch swatch-mono"></div>
+            <span>Pure Mono</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hardware Automation -->
+      <div>
+        <div class="section-title">Automation & Reset</div>
+        <div class="control-card">
+          <div class="toggle-row">
+            <span class="control-label">Auto-Reignite Keep-Alive</span>
+            <label class="switch">
+              <input type="checkbox" id="toggle-auto-reignite">
+              <span class="slider-toggle"></span>
+            </label>
+          </div>
+          <button class="btn btn-icon" id="btn-reset-sliders" style="width:100%; justify-content:center;">
+            RESET TO FACTORY DEFAULTS
+          </button>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- Center Viewport -->
+    <div class="viewport-container">
+      <div class="viewport-canvas-wrapper">
+        <div class="viewport-frame">
+          
+          <!-- Live MJPEG Stream -->
+          <img id="stream-view" src="/stream.mjpeg" alt="Live Infrared Stream">
+
+          <!-- Reticles -->
+          <div class="reticle reticle-tl"></div>
+          <div class="reticle reticle-tr"></div>
+          <div class="reticle reticle-bl"></div>
+          <div class="reticle reticle-br"></div>
+
+          <!-- HUD Grid Overlay -->
+          <div class="hud-grid" id="hud-grid">
+            <div class="grid-line-h" style="top: 33.3%;"></div>
+            <div class="grid-line-h" style="top: 66.6%;"></div>
+            <div class="grid-line-v" style="left: 33.3%;"></div>
+            <div class="grid-line-v" style="left: 66.6%;"></div>
+            <div class="grid-crosshair"></div>
+          </div>
+
+          <!-- Top-Right Dynamic Histogram -->
+          <div class="histogram-overlay">
+            <div class="hist-title">HISTOGRAM // L8</div>
+            <canvas id="hist-canvas" width="120" height="34"></canvas>
+          </div>
+
+          <!-- Shutter Flash -->
+          <div class="flash-overlay" id="flash-overlay"></div>
+
+        </div>
+      </div>
+
+      <!-- Bottom Shutter Bar -->
+      <footer class="viewport-footer">
+        <!-- Gallery Strip -->
+        <div class="gallery-preview" id="gallery-strip"></div>
+
+        <!-- Center Shutter Button -->
+        <div class="shutter-group">
+          <button class="shutter-btn" id="shutter-btn" title="Capture Snapshot (Spacebar)">
+            <div class="shutter-inner"></div>
+          </button>
+        </div>
+
+        <!-- Open Folder Button -->
+        <div>
+          <button class="btn btn-icon" id="btn-open-folder" title="Open Captures folder">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+            <span>CAPTURES</span>
+          </button>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Right Side Terminal -->
+    <aside class="terminal-panel" id="terminal-panel">
+      <div class="terminal-header">
+        <div class="terminal-title">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+          <span>TELEMETRY TERMINAL</span>
+        </div>
+        <div class="terminal-actions">
+          <button class="term-btn" id="btn-term-clear">CLEAR</button>
+          <button class="term-btn" id="btn-term-collapse">HIDE</button>
+        </div>
+      </div>
+
+      <div class="terminal-logs" id="terminal-logs">
+        <!-- Live log entries will be inserted here -->
+      </div>
+    </aside>
+
+    <div class="terminal-expand-tab" id="terminal-expand-tab" title="Open Terminal">
+      ◀
+    </div>
+
+  </main>
+
+  <script>
+    // State management & UI handlers
+    let lastLogCount = 0;
+    let isAutoScrolling = true;
+
+    // Elements
+    const sliderExposure = document.getElementById('slider-exposure');
+    const valExposure = document.getElementById('val-exposure');
+    const sliderGain = document.getElementById('slider-gain');
+    const valGain = document.getElementById('val-gain');
+    const sliderGamma = document.getElementById('slider-gamma');
+    const valGamma = document.getElementById('val-gamma');
+    const sliderBright = document.getElementById('slider-bright');
+    const valBright = document.getElementById('val-bright');
+    const sliderContrast = document.getElementById('slider-contrast');
+    const valContrast = document.getElementById('val-contrast');
+    
+    const toggleClahe = document.getElementById('toggle-clahe');
+    const sliderClaheClip = document.getElementById('slider-clahe-clip');
+    const valClaheClip = document.getElementById('val-clahe-clip');
+    const sliderClaheGrid = document.getElementById('slider-clahe-grid');
+    const valClaheGrid = document.getElementById('val-clahe-grid');
+    const toggleAutoReignite = document.getElementById('toggle-auto-reignite');
+
+    const fpsVal = document.getElementById('fps-val');
+    const meanVal = document.getElementById('mean-val');
+    const floodVal = document.getElementById('flood-val');
+    const floodPill = document.getElementById('flood-pill');
+    const btnVcam = document.getElementById('btn-vcam');
+    const vcamText = document.getElementById('vcam-btn-text');
+    const btnReignite = document.getElementById('btn-reignite');
+    const shutterBtn = document.getElementById('shutter-btn');
+    const flashOverlay = document.getElementById('flash-overlay');
+    const histCanvas = document.getElementById('hist-canvas');
+    const histCtx = histCanvas.getContext('2d');
+    const terminalLogs = document.getElementById('terminal-logs');
+    const galleryStrip = document.getElementById('gallery-strip');
+
+    // Debounced settings update
+    let settingsTimeout = null;
+    function sendSettings() {
+      clearTimeout(settingsTimeout);
+      settingsTimeout = setTimeout(() => {
+        const payload = {
+          exposure_ev: parseFloat(sliderExposure.value),
+          gain: parseFloat(sliderGain.value),
+          gamma: parseFloat(sliderGamma.value),
+          brightness: parseInt(sliderBright.value),
+          contrast: parseFloat(sliderContrast.value),
+          clahe_enabled: toggleClahe.checked,
+          clahe_clip: parseFloat(sliderClaheClip.value),
+          clahe_grid: parseInt(sliderClaheGrid.value),
+          auto_reignite: toggleAutoReignite.checked
+        };
+        fetch('/api/settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      }, 50);
+    }
+
+    // Slider Listeners
+    sliderExposure.addEventListener('input', () => {
+      valExposure.textContent = `${parseFloat(sliderExposure.value) > 0 ? '+' : ''}${sliderExposure.value} EV`;
+      sendSettings();
+    });
+    sliderGain.addEventListener('input', () => {
+      valGain.textContent = `${sliderGain.value}x`;
+      sendSettings();
+    });
+    sliderGamma.addEventListener('input', () => {
+      valGamma.textContent = parseFloat(sliderGamma.value).toFixed(2);
+      sendSettings();
+    });
+    sliderBright.addEventListener('input', () => {
+      valBright.textContent = sliderBright.value;
+      sendSettings();
+    });
+    sliderContrast.addEventListener('input', () => {
+      valContrast.textContent = `${parseFloat(sliderContrast.value).toFixed(2)}x`;
+      sendSettings();
+    });
+
+    toggleClahe.addEventListener('change', sendSettings);
+    sliderClaheClip.addEventListener('input', () => {
+      valClaheClip.textContent = sliderClaheClip.value;
+      sendSettings();
+    });
+    sliderClaheGrid.addEventListener('input', () => {
+      valClaheGrid.textContent = `${sliderClaheGrid.value}x${sliderClaheGrid.value}`;
+      sendSettings();
+    });
+    toggleAutoReignite.addEventListener('change', sendSettings);
+
+    // Colormap Chips
+    document.querySelectorAll('.palette-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.palette-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        const map = chip.getAttribute('data-map');
+        fetch('/api/settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ colormap: map })
+        });
+      });
+    });
+
+    // Reset Sliders
+    document.getElementById('btn-reset-sliders').addEventListener('click', () => {
+      sliderExposure.value = 0; valExposure.textContent = "0.0 EV";
+      sliderGain.value = 1; valGain.textContent = "1.0x";
+      sliderGamma.value = 1.0; valGamma.textContent = "1.00";
+      sliderBright.value = 0; valBright.textContent = "0";
+      sliderContrast.value = 1.0; valContrast.textContent = "1.00x";
+      toggleClahe.checked = true;
+      sliderClaheClip.value = 3.5; valClaheClip.textContent = "3.5";
+      sliderClaheGrid.value = 8; valClaheGrid.textContent = "8x8";
+      sendSettings();
+    });
+
+    // Re-ignite button
+    btnReignite.addEventListener('click', () => {
+      btnReignite.style.opacity = '0.5';
+      fetch('/api/reignite', { method: 'POST' }).finally(() => {
+        setTimeout(() => { btnReignite.style.opacity = '1'; }, 1000);
+      });
+    });
+
+    // Virtual Camera toggle
+    btnVcam.addEventListener('click', () => {
+      fetch('/api/vcam/toggle', { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+          updateVcamUI(data.vcam_active);
+        });
+    });
+
+    function updateVcamUI(active) {
+      if (active) {
+        btnVcam.classList.add('active');
+        vcamText.textContent = "DISCORD WEBCAM: ON";
+      } else {
+        btnVcam.classList.remove('active');
+        vcamText.textContent = "DISCORD WEBCAM: OFF";
+      }
+    }
+
+    // Shutter Trigger
+    function triggerShutter() {
+      flashOverlay.classList.add('trigger');
+      setTimeout(() => flashOverlay.classList.remove('trigger'), 50);
+
+      fetch('/api/snapshot', { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+          if (data.filename) {
+            loadThumbnails();
+          }
+        });
+    }
+
+    shutterBtn.addEventListener('click', triggerShutter);
+
+    // Open captures folder
+    document.getElementById('btn-open-folder').addEventListener('click', () => {
+      fetch('/api/open_folder', { method: 'POST' });
+    });
+
+    // Grid toggle
+    const hudGrid = document.getElementById('hud-grid');
+    document.getElementById('btn-grid').addEventListener('click', () => {
+      hudGrid.classList.toggle('visible');
+    });
+
+    // Terminal Collapse
+    const mainContainer = document.getElementById('main-container');
+    document.getElementById('btn-term-collapse').addEventListener('click', () => {
+      mainContainer.classList.add('terminal-collapsed');
+    });
+    document.getElementById('terminal-expand-tab').addEventListener('click', () => {
+      mainContainer.classList.remove('terminal-collapsed');
+    });
+    document.getElementById('btn-terminal-toggle').addEventListener('click', () => {
+      mainContainer.classList.toggle('terminal-collapsed');
+    });
+
+    // Clear Terminal
+    document.getElementById('btn-term-clear').addEventListener('click', () => {
+      terminalLogs.innerHTML = '';
+    });
+
+    // Keyboard Shortcuts
+    window.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT') return;
+      if (e.code === 'Space') {
+        e.preventDefault();
+        triggerShutter();
+      } else if (e.key === 'r' || e.key === 'R') {
+        btnReignite.click();
+      } else if (e.key === 'v' || e.key === 'V') {
+        btnVcam.click();
+      } else if (e.key === 'g' || e.key === 'G') {
+        document.getElementById('btn-grid').click();
+      } else if (e.key === 't' || e.key === 'T') {
+        document.getElementById('btn-terminal-toggle').click();
+      }
+    });
+
+    // Telemetry Polling (every 500ms)
+    async function pollTelemetry() {
+      try {
+        const res = await fetch('/api/telemetry');
+        const data = await res.json();
+
+        // Update readouts
+        fpsVal.textContent = data.fps;
+        meanVal.textContent = data.mean.toFixed(1);
+        floodVal.textContent = data.illum_status;
+        if (data.illum_status === "ACTIVE") {
+          floodPill.classList.remove('red');
+        } else {
+          floodPill.classList.add('red');
+        }
+
+        updateVcamUI(data.vcam_active);
+
+        // Render Histogram
+        renderHistogram(data.histogram);
+
+        // Render Logs in Terminal
+        renderLogs(data.logs);
+
+        // Update Gallery thumbnails
+        updateGallery(data.snapshots);
+
+      } catch (err) {
+        // server might be resetting or reconnecting
+      }
+      setTimeout(pollTelemetry, 500);
+    }
+
+    function renderHistogram(bins) {
+      if (!bins) return;
+      histCtx.clearRect(0, 0, 120, 34);
+      const w = 120 / bins.length;
+      histCtx.fillStyle = '#00FFA3';
+      for (let i = 0; i < bins.length; i++) {
+        const h = (bins[i] / 100) * 32;
+        histCtx.fillRect(i * w, 34 - h, w - 1, h);
+      }
+    }
+
+    function renderLogs(logs) {
+      if (!logs) return;
+      terminalLogs.innerHTML = '';
+      logs.forEach(log => {
+        const div = document.createElement('div');
+        div.className = 'log-line';
+        div.innerHTML = `
+          <span class="log-time">[${log.time}]</span>
+          <span class="log-cat ${log.category}">${log.category}</span>
+          <span class="log-msg ${log.level}">${log.message}</span>
+        `;
+        terminalLogs.appendChild(div);
+      });
+      if (isAutoScrolling) {
+        terminalLogs.scrollTop = terminalLogs.scrollHeight;
+      }
+    }
+
+    let lastSnapshots = "";
+    function updateGallery(snaps) {
+      if (!snaps) return;
+      const key = snaps.join(',');
+      if (key === lastSnapshots) return;
+      lastSnapshots = key;
+
+      galleryStrip.innerHTML = '';
+      snaps.forEach(fn => {
+        const img = document.createElement('img');
+        img.className = 'gallery-thumb';
+        img.src = `/captures/${fn}`;
+        img.title = fn;
+        img.addEventListener('click', () => {
+          window.open(`/captures/${fn}`, '_blank');
+        });
+        galleryStrip.appendChild(img);
+      });
+    }
+
+    // Start Telemetry
+    pollTelemetry();
+  </script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+# SPECTRA // IR-CORE - Precision Infrared Studio Suite
+# Note: Windows 10/11 with Python 3.10 or 3.11 is strongly recommended for winsdk binary wheels.
+
+numpy>=1.24.0
+opencv-python>=4.8.0
+pyvirtualcam>=0.11.0
+winsdk>=1.0.0b10; sys_platform == 'win32'
