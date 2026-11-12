@@ -9,9 +9,17 @@
 
 ---
 
+<p align="center">
+  <img src="Captures/Screenshot%202026-11-13%20042229.png" alt="SPECTRA IR-CORE Studio UI" width="900">
+</p>
+
 **SPECTRA // IR-CORE** unlocks the hidden potential of your laptop's integrated Windows Hello Infrared (IR) camera sensor (typically used exclusively for biometric facial login). 
 
 By capturing raw infrared data via the Windows MediaCapture WinRT API, **SPECTRA** provides a full cyber-tactical desktop studio with real-time optical controls, adaptive night-vision algorithms, thermal false-color palettes, and a system-wide virtual webcam driver for **Discord**, **Zoom**, **Google Meet**, **Microsoft Teams**, and **OBS**.
+
+<p align="center">
+  <img src="Captures/IR_Capture_20261113_042218.png" alt="Sample Infrared Capture" width="540">
+</p>
 
 ---
 

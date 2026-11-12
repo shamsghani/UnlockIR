@@ -38,9 +38,11 @@ venv.bak/
 app.log
 *.tmp
 
-# User Captures (keep directory tracked via .gitkeep)
+# User Captures (keep showcase assets and .gitkeep)
 Captures/*
 !Captures/.gitkeep
+!Captures/Screenshot*
+!Captures/IR_Capture_20261113_042218.png
 IR_Captures/
 
 # Windows system & shortcuts
